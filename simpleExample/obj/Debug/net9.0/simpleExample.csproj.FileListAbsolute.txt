@@ -1,0 +1,17 @@
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/bin/Debug/net9.0/simpleExample
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/bin/Debug/net9.0/simpleExample.deps.json
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/bin/Debug/net9.0/simpleExample.runtimeconfig.json
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/bin/Debug/net9.0/simpleExample.dll
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/bin/Debug/net9.0/simpleExample.pdb
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/bin/Debug/net9.0/RabbitMQ.Client.dll
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleExample.csproj.AssemblyReference.cache
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleExample.GeneratedMSBuildEditorConfig.editorconfig
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleExample.AssemblyInfoInputs.cache
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleExample.AssemblyInfo.cs
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleExample.csproj.CoreCompileInputs.cache
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleEx.F62DA601.Up2Date
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleExample.dll
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/refint/simpleExample.dll
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleExample.pdb
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/simpleExample.genruntimeconfig.cache
+/Users/bryantlin/Documents/TestRabbmitmq/simpleExample/obj/Debug/net9.0/ref/simpleExample.dll
