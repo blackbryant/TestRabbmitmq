@@ -14,6 +14,15 @@ public class Consumer01
         int rabbitMqPort = RabbitConfig.PORT; // 這裡應該是數字，不是字串
         string rabbitMqUser = RabbitConfig.MQ_USER;
         string rabbitMqPass = RabbitConfig.MQ_PASS;
+
+        if(File.Exists("log.csv"))
+        {
+            File.Delete("log.csv");
+           
+        }
+
+        FileStream fs =  File.Create("log.csv");
+        StreamWriter sw = new StreamWriter(fs);
         
         var factory = new ConnectionFactory()
         {
@@ -34,12 +43,7 @@ public class Consumer01
 
         channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
         var consumer = new EventingBasicConsumer(channel);
-        channel.BasicConsume(queue: "tutorial",
-                                autoAck: true,
-                                consumer: consumer
-                                
-                                );
-
+     
         
         consumer.Received += (model, ea) =>
         {  
@@ -47,9 +51,29 @@ public class Consumer01
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             Console.WriteLine($" [x] Received: {message}");
+            Thread.Sleep(2000);
+            channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+            Console.WriteLine(" [x] Done");
+            string aa = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},{message} \n"; 
+            fs.Write(Encoding.UTF8.GetBytes(aa), 0, Encoding.UTF8.GetBytes(aa).Length);
+            fs.Flush();
+
         };
 
-        
+        string reuslt =  channel.BasicConsume(queue: "tutorial",
+                            autoAck: false,
+                            consumer: consumer
+                            );
+
+        if(reuslt == null)
+        {
+            fs.Close();
+            sw.Close();          
+        }
+
+
+        Console.ReadLine();
+
     }
 }
 
