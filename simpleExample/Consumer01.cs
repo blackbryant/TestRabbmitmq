@@ -45,21 +45,13 @@ public class Consumer01
         var consumer = new EventingBasicConsumer(channel);
      
         
-        consumer.Received += (model, ea) =>
-        {  
-             
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-            Console.WriteLine($" [x] Received: {message}");
-            Thread.Sleep(2000);
-            channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
-            Console.WriteLine(" [x] Done");
-            string aa = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},{message} \n"; 
-            fs.Write(Encoding.UTF8.GetBytes(aa), 0, Encoding.UTF8.GetBytes(aa).Length);
-            fs.Flush();
-
+        consumer.Received  += (model, ea) =>
+        {
+            HandleMessage(channel, ea, fs);
         };
+        
 
+        Console.WriteLine($" [x] 執行: BasicConsume");
         string reuslt =  channel.BasicConsume(queue: "tutorial",
                             autoAck: false,
                             consumer: consumer
@@ -75,7 +67,22 @@ public class Consumer01
         Console.ReadLine();
 
     }
+
+    // 回呼函式
+    private static void HandleMessage(IModel channel, BasicDeliverEventArgs ea, FileStream fs)
+    {
+        var body = ea.Body.ToArray();
+        var message = Encoding.UTF8.GetString(body);
+        
+        Thread.Sleep(2000);
+        channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+        Console.WriteLine($" [x] Received: {message}");
+        string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss},{message} \n"; 
+        fs.Write(Encoding.UTF8.GetBytes(logEntry), 0, Encoding.UTF8.GetBytes(logEntry).Length);
+        fs.Flush();
+    }
 }
+
 
 
 
