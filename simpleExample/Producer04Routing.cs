@@ -1,6 +1,6 @@
 ﻿
 /// <summary>
-/// Work Queues
+/// Direct exchange routing example
 /// This class demonstrates a simple RabbitMQ producer that sends persistent messages to a queue.
 /// </summary>
 /// 
@@ -11,7 +11,10 @@ using RabbitMQ.Client;
 public class Producer04Routing
 {
 
-    private const string QUEUE_NAME = "workqueue";
+    private const string QUEUE_NAME= "directqueue";
+    private const string QUEUE_NAME_EVEN = "directqueue_even";
+    private const string QUEUE_NAME_ODD = "directqueue_odd";
+    private const string EXCHANGE_ROUTING = "directexchange";
 
     /// <summary>
     /// The main entry point for the application.
@@ -39,12 +42,27 @@ public class Producer04Routing
         using var channel = connection.CreateModel();
 
         // Declare a queue with persistence enabled
-        channel.QueueDeclare(queue: QUEUE_NAME,
+        channel.QueueDeclare(queue: QUEUE_NAME_EVEN,
                              durable: true,  // Enable persistence
                              exclusive: false,
                              autoDelete: false,
                              arguments: null);
 
+        channel.QueueDeclare(queue: QUEUE_NAME_ODD,
+                             durable: true,  // Enable persistence
+                             exclusive: false,
+                             autoDelete: false,
+                             arguments: null);
+
+
+         // Declare a direct exchange
+        channel.ExchangeDeclare(exchange: EXCHANGE_ROUTING, type: ExchangeType.Direct);
+        
+         // Bind the queue to the exchange with routing keys
+        channel.QueueBind(queue: QUEUE_NAME_EVEN, exchange: EXCHANGE_ROUTING, routingKey: "even");
+        channel.QueueBind(queue: QUEUE_NAME_ODD , exchange: EXCHANGE_ROUTING, routingKey: "odd");
+
+        
         // Create properties for the message and set it to be persistent
         var properties = channel.CreateBasicProperties();
         properties.Persistent = true; // Set message to be persistent
@@ -53,11 +71,27 @@ public class Producer04Routing
         for (int i = 0; i < 20; i++)
         {
             Message message = new Message($" Message-{i}");
-            var body = Encoding.UTF8.GetBytes(message.ToJson());
 
+
+            string key  = "";
+            
+            if(i % 2 == 0)
+            {
+                key = "even";
+                
+            }
+            else
+            {
+                key = "odd";
+                
+            }
+
+            message.RoutingKey = key;
             // Publish the message to the queue
-            channel.BasicPublish(exchange: "",
-                                 routingKey: QUEUE_NAME,
+            var body = Encoding.UTF8.GetBytes(message.ToJson());
+            channel.BasicPublish(
+                                 exchange: EXCHANGE_ROUTING,
+                                 routingKey: key,
                                  basicProperties: properties,
                                  body: body);
 
@@ -75,6 +109,8 @@ public class Producer04Routing
     {
         public string Uuid { get; set; }
         public string? Text { get; set; }
+
+        public string? RoutingKey { get; set; }
         
 
         public Message()
@@ -90,7 +126,7 @@ public class Producer04Routing
 
         public override string ToString()
         {
-            return $"[x] Sent: {Text} - {Uuid}";
+            return $"[x] Sent: {Text} - {Uuid} - {RoutingKey}";
         }
 
         public string ToJson()

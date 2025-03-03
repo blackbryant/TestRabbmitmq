@@ -5,7 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>Consumer02Work</StartupObject>
+    <StartupObject>Consumer03Routing</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
