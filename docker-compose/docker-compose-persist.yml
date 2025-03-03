@@ -1,0 +1,16 @@
+#rabbitmq 持久化重點: hostname和/var/lib/rabbitmq 需要加入
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq_host
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    user: root
+    volumes:
+      - ./rabbitmq-log:/var/log/rabbitmq
+      - ./rabbitmq-data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=1234
