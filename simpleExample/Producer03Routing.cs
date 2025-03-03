@@ -1,13 +1,18 @@
 ﻿
 /// <summary>
+/// Work Queues
 /// This class demonstrates a simple RabbitMQ producer that sends persistent messages to a queue.
 /// </summary>
 /// 
 using System.Text;
+using System.Text.Json;
 using RabbitMQ.Client;
 
-public class Producer02
+public class Producer04Routing
 {
+
+    private const string QUEUE_NAME = "workqueue";
+
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
@@ -34,7 +39,7 @@ public class Producer02
         using var channel = connection.CreateModel();
 
         // Declare a queue with persistence enabled
-        channel.QueueDeclare(queue: "tutorial",
+        channel.QueueDeclare(queue: QUEUE_NAME,
                              durable: true,  // Enable persistence
                              exclusive: false,
                              autoDelete: false,
@@ -47,21 +52,52 @@ public class Producer02
         // Send 20 messages to the queue
         for (int i = 0; i < 20; i++)
         {
-            string msg = Guid.NewGuid().ToString();
-            var body = Encoding.UTF8.GetBytes(msg);
+            Message message = new Message($" Message-{i}");
+            var body = Encoding.UTF8.GetBytes(message.ToJson());
 
             // Publish the message to the queue
             channel.BasicPublish(exchange: "",
-                                 routingKey: "tutorial",
+                                 routingKey: QUEUE_NAME,
                                  basicProperties: properties,
                                  body: body);
 
             // Output the sent message to the console
-            Console.WriteLine($" [x] Sent: {msg}");
+            Console.WriteLine($" [x] Sent: {message.ToJson()}");
         }
 
         // Inform the user that messages have been sent and wait for a key press to exit
         Console.WriteLine("Messages sent. Press any key to exit.");
         Console.ReadKey();
     }
+
+
+    public class Message
+    {
+        public string Uuid { get; set; }
+        public string? Text { get; set; }
+        
+
+        public Message()
+        {
+            Uuid = Guid.NewGuid().ToString();
+        }
+
+        public Message(string text)
+        {
+            Text = text;
+            Uuid = Guid.NewGuid().ToString();
+        }
+
+        public override string ToString()
+        {
+            return $"[x] Sent: {Text} - {Uuid}";
+        }
+
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+
+    }
+
 }
