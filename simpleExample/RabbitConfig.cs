@@ -2,7 +2,7 @@
 
 public class RabbitConfig
 {
-    public const string HOST = "172.19.150.14";
+    public const string HOST = "172.19.145.250";
     public const int PORT = 5672;
 
     public const string MQ_USER = "root";
